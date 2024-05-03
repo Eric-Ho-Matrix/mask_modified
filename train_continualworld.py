@@ -41,7 +41,8 @@ def ppo_baseline_continualworld(name, args):
     # get num_tasks from env_config
     with open(env_config_path, 'r') as f:
         env_config_ = json.load(f)
-    num_tasks = len(env_config_['tasks'])
+    # num_tasks = len(env_config_['tasks'])
+    num_tasks = env_config_['label_dim']
     del env_config_
 
     task_fn = lambda log_dir: ContinualWorld(name, env_config_path, log_dir, config.seed)
@@ -152,6 +153,7 @@ def ppo_ll_continualworld(name, args):
 
     config.eval_interval = 200
     config.task_ids = np.arange(num_tasks).tolist()
+    # config.task_ids =  
 
     agent = LLAgent(config)
     config.agent_name = agent.__class__.__name__

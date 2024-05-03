@@ -1,0 +1,109 @@
+name: mask2
+channels:
+  # - pytorch
+  - anaconda
+  - defaults
+dependencies:
+  - python=3.9
+  - _libgcc_mutex
+  - blas
+  - bzip2
+  - ca-certificates
+  - certifi
+  - cmake=3.14.0
+  # - cudatoolkit=10.1.168=0
+  # - cudnn=7.6.0=cuda10.1_0
+  - dbus
+  - expat
+  - fontconfig
+  - freetype
+  - glib
+  - gst-plugins-base
+  - gstreamer
+  - icu
+  - intel-openmp
+  - joblib
+  - jpeg
+  - kiwisolver
+  - krb5
+  - libcurl
+  - libedit
+  - libffi
+  - libgcc-ng
+  - libgfortran-ng
+  - libpng
+  - libssh2
+  - libstdcxx-ng
+  - libtiff
+  - libuuid
+  - libxcb
+  - libxml2
+  # - magma-cuda101=2.5.1=1
+  - mkl
+  - mkl-include
+  - mkl-service
+  - mkl_fft
+  - mkl_random
+  - ncurses
+  - ninja
+  - olefile
+  - openssl
+  - pandas
+  - patchelf
+  - pcre
+  - pillow
+  - pip
+  - pycparser
+  - pyparsing
+  - pyqt
+  # - python=3.7.4
+  # - python-dateutil
+  # - pytorch=1.3.0=py3.7_cuda10.1.243_cudnn7.6.3_0
+  - pytz
+  - pyyaml
+  - qt
+  - readline
+  - rhash
+  - scikit-learn
+  - setuptools
+  - sip
+  - sqlite
+  - tabulate
+  - tk
+  # - torchvision=0.4.1=py37_cu101
+  - tornado
+  - typing
+  - wheel
+  - xz
+  - yaml
+  - zlib
+  - zstd
+  - pip:
+    - atari-py
+    - box2d-py
+    - cached-property
+    - cffi
+    - chardet
+    - cycler
+    - cython==0.29.13
+    - decorator
+    - future
+    - glfw
+    - idna
+    - imageio
+    - lockfile
+    - matplotlib
+    - multipledispatch
+    - networkx
+    - nose
+    - numpy
+    - pygame
+    - pyglet
+    - pyopengl
+    - pyrr
+    - pywavelets
+    - requests
+    - scikit-image
+    - scipy
+    - six
+    - urllib3

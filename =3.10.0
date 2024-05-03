@@ -1,0 +1,22 @@
+Collecting pytest
+  Downloading pytest-8.2.0-py3-none-any.whl.metadata (7.5 kB)
+Collecting pytest-mock
+  Downloading pytest_mock-3.14.0-py3-none-any.whl.metadata (3.8 kB)
+Collecting iniconfig (from pytest)
+  Downloading iniconfig-2.0.0-py3-none-any.whl.metadata (2.6 kB)
+Requirement already satisfied: packaging in /home/qin/anaconda3/envs/mask/lib/python3.9/site-packages (from pytest) (23.2)
+Collecting pluggy<2.0,>=1.5 (from pytest)
+  Downloading pluggy-1.5.0-py3-none-any.whl.metadata (4.8 kB)
+Collecting exceptiongroup>=1.0.0rc8 (from pytest)
+  Downloading exceptiongroup-1.2.1-py3-none-any.whl.metadata (6.6 kB)
+Collecting tomli>=1 (from pytest)
+  Downloading tomli-2.0.1-py3-none-any.whl.metadata (8.9 kB)
+Downloading pytest-8.2.0-py3-none-any.whl (339 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 339.2/339.2 kB 3.2 MB/s eta 0:00:00
+Downloading pytest_mock-3.14.0-py3-none-any.whl (9.9 kB)
+Downloading exceptiongroup-1.2.1-py3-none-any.whl (16 kB)
+Downloading pluggy-1.5.0-py3-none-any.whl (20 kB)
+Downloading tomli-2.0.1-py3-none-any.whl (12 kB)
+Downloading iniconfig-2.0.0-py3-none-any.whl (5.9 kB)
+Installing collected packages: tomli, pluggy, iniconfig, exceptiongroup, pytest, pytest-mock
+Successfully installed exceptiongroup-1.2.1 iniconfig-2.0.0 pluggy-1.5.0 pytest-8.2.0 pytest-mock-3.14.0 tomli-2.0.1

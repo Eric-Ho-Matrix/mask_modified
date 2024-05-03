@@ -1,0 +1,13 @@
+Requirement already satisfied: numpy in /home/qin/anaconda3/envs/mask/lib/python3.9/site-packages (1.26.4)
+Requirement already satisfied: gymnasium in /home/qin/anaconda3/envs/mask/lib/python3.9/site-packages (0.28.1)
+Collecting pygame
+  Using cached pygame-2.5.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (13 kB)
+Requirement already satisfied: jax-jumpy>=1.0.0 in /home/qin/anaconda3/envs/mask/lib/python3.9/site-packages (from gymnasium) (1.0.0)
+Requirement already satisfied: cloudpickle>=1.2.0 in /home/qin/anaconda3/envs/mask/lib/python3.9/site-packages (from gymnasium) (2.2.1)
+Requirement already satisfied: typing-extensions>=4.3.0 in /home/qin/anaconda3/envs/mask/lib/python3.9/site-packages (from gymnasium) (4.11.0)
+Requirement already satisfied: farama-notifications>=0.0.1 in /home/qin/anaconda3/envs/mask/lib/python3.9/site-packages (from gymnasium) (0.0.4)
+Requirement already satisfied: importlib-metadata>=4.8.0 in /home/qin/anaconda3/envs/mask/lib/python3.9/site-packages (from gymnasium) (7.0.1)
+Requirement already satisfied: zipp>=0.5 in /home/qin/anaconda3/envs/mask/lib/python3.9/site-packages (from importlib-metadata>=4.8.0->gymnasium) (3.17.0)
+Using cached pygame-2.5.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (14.0 MB)
+Installing collected packages: pygame
+Successfully installed pygame-2.5.2

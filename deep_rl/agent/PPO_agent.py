@@ -105,6 +105,7 @@ class PPOContinualLearnerAgent(BaseContinualLearnerAgent):
             self.evaluation_env = config.eval_task_fn(config.log_dir)
             self.task = self.evaluation_env if self.task is None else self.task
         tasks_ = self.task.get_all_tasks(config.cl_requires_task_label)
+        # print(f"tasks len = {len(tasks_)} task_ids = {config.task_ids}")
         tasks = [tasks_[task_id] for task_id in config.task_ids]
         del tasks_
         self.config.cl_tasks_info = tasks
@@ -137,14 +138,14 @@ class PPOContinualLearnerAgent(BaseContinualLearnerAgent):
         # other performance metric (specifically for metaworld environment)
         if self.task.name == config.ENV_METAWORLD or self.task.name == config.ENV_CONTINUALWORLD:
             self._rollout_fn = self._rollout_metaworld
-            self.episode_success_rate = np.zeros(config.num_workers)
+            # self.episode_success_rate = np.zeros(config.num_workers)
             self.last_episode_success_rate = np.zeros(config.num_workers)
             # used to compute average across all episodes that may occur in an iteration
             self.running_episodes_success_rate = [[] for _ in range(config.num_workers)]
             self.iteration_success_rate = np.zeros(config.num_workers)
         else:
             self._rollout_fn = self._rollout_normal
-            self.episode_success_rate = None
+            # self.episode_success_rate = None
             self.last_episode_success_rate = None
             self.running_episodes_success_rate = None
             self.iteration_success_rate = None
@@ -290,19 +291,22 @@ class PPOContinualLearnerAgent(BaseContinualLearnerAgent):
             _, actions, log_probs, _, values, _ = self.network.predict(states, \
                 task_label=batch_task_label)
             next_states, rewards, terminals, infos = self.task.step(actions.cpu().detach().numpy())
-            success_rates = [info['success'] for info in infos]
+            # print(infos)
+            # exit()
+
+            # success_rates = [info['success'] for info in infos]
             self.episode_rewards += rewards
-            self.episode_success_rate += success_rates
+            # self.episode_success_rate += success_rates
             rewards = config.reward_normalizer(rewards)
             for i, terminal in enumerate(terminals):
                 if terminals[i]:
                     self.running_episodes_rewards[i].append(self.episode_rewards[i])
                     self.last_episode_rewards[i] = self.episode_rewards[i]
                     self.episode_rewards[i] = 0
-                    self.episode_success_rate[i] = (self.episode_success_rate[i] > 0).astype(np.uint8)
-                    self.running_episodes_success_rate[i].append(self.episode_success_rate[i])
-                    self.last_episode_success_rate[i] = self.episode_success_rate[i]
-                    self.episode_success_rate[i] = 0
+                    # self.episode_success_rate[i] = (self.episode_success_rate[i] > 0).astype(np.uint8)
+                    # self.running_episodes_success_rate[i].append(self.episode_success_rate[i])
+                    # self.last_episode_success_rate[i] = self.episode_success_rate[i]
+                    # self.episode_success_rate[i] = 0
             next_states = config.state_normalizer(next_states)
 
             # save data to buffer for the detect module

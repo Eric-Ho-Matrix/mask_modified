@@ -12,6 +12,7 @@ from ..utils import *
 import uuid
 import json
 import itertools
+from mjrl.utils.gym_env import GymEnv
 
 # fix to enable running the code on MacOS using python>=3.8
 # spawn multiprocessing start method fails to run the lambda
@@ -61,7 +62,7 @@ class DynamicGrid(BaseTask):
     def __init__(self, name, env_config_path=None, log_dir=None, seed=None, max_steps=100):
         BaseTask.__init__(self)
         self.name = name
-        import dynamic_grid
+        # import dynamic_grid
         self.env = gym.make(self.name)
         self.env._max_episode_steps = max_steps
         self.action_dim = self.env.action_space.n
@@ -447,114 +448,114 @@ class MetaCTgraphFlatObs(MetaCTgraph):
         state = self.env.reset()
         return state.ravel()
 
-class MiniGrid(BaseTask):
-    TIME_LIMIT=200
-    def __init__(self, name, env_config_path, log_dir=None, seed=1000, eval_mode=False):
-        BaseTask.__init__(self)
-        self.name = name
-        from gym.wrappers import TimeLimit
-        import gym_minigrid
-        from gym_minigrid.wrappers import ImgObsWrapper, ReseedWrapper, ActionBonus, StateBonus
-        self.wrappers_dict = {'ActionBonus': ActionBonus, 'StateBonus': StateBonus}
-        with open(env_config_path, 'r') as f:
-            env_config = json.load(f)
-        self.env_config = env_config
-        env_names = env_config['tasks']
-        if 'seeds' in env_config.keys():
-            seeds = env_config['seeds']
-        else:
-            seeds = seed
-            del seed
+# class MiniGrid(BaseTask):
+#     TIME_LIMIT=200
+#     def __init__(self, name, env_config_path, log_dir=None, seed=1000, eval_mode=False):
+#         BaseTask.__init__(self)
+#         self.name = name
+#         from gym.wrappers import TimeLimit
+#         import gym_minigrid
+#         from gym_minigrid.wrappers import ImgObsWrapper, ReseedWrapper, ActionBonus, StateBonus
+#         self.wrappers_dict = {'ActionBonus': ActionBonus, 'StateBonus': StateBonus}
+#         with open(env_config_path, 'r') as f:
+#             env_config = json.load(f)
+#         self.env_config = env_config
+#         env_names = env_config['tasks']
+#         if 'seeds' in env_config.keys():
+#             seeds = env_config['seeds']
+#         else:
+#             seeds = seed
+#             del seed
 
-        if isinstance(seeds, int): seeds = [seeds,] * len(env_names)
-        elif isinstance(seeds, list):
-            assert len(seeds) == len(env_names), 'number of seeds in config file should match'\
-                ' the number of tasks.'
-        else: raise ValueError('invalid seed specification in config file')
-        self.envs = {'{0}_seed{1}'.format(name, seed) : \
-            ReseedWrapper(ImgObsWrapper(gym.make(name)), seeds=[seed,]) \
-            for name, seed in zip(env_names, seeds)}
-        env_names = ['{0}_seed{1}'.format(name, seed) for name, seed in zip(env_names, seeds)]
-        #self.envs = {name: TimeLimit(env, MiniGrid.TIME_LIMIT) for name, env in self.envs.items()}
+#         if isinstance(seeds, int): seeds = [seeds,] * len(env_names)
+#         elif isinstance(seeds, list):
+#             assert len(seeds) == len(env_names), 'number of seeds in config file should match'\
+#                 ' the number of tasks.'
+#         else: raise ValueError('invalid seed specification in config file')
+#         self.envs = {'{0}_seed{1}'.format(name, seed) : \
+#             ReseedWrapper(ImgObsWrapper(gym.make(name)), seeds=[seed,]) \
+#             for name, seed in zip(env_names, seeds)}
+#         env_names = ['{0}_seed{1}'.format(name, seed) for name, seed in zip(env_names, seeds)]
+#         #self.envs = {name: TimeLimit(env, MiniGrid.TIME_LIMIT) for name, env in self.envs.items()}
 
-        # apply exploration bonus wrapper only to training envs
-        if not eval_mode:
-            if 'wrappers' in env_config.keys():
-                for str_wrapper in env_config['wrappers']:
-                    cls_wrapper = self.wrappers_dict[str_wrapper]
-                    for k in self.envs.keys():
-                        self.envs[k] = cls_wrapper(self.envs[k])
-        self.observation_space = self.envs[env_names[0]].observation_space
-        self.action_space = self.envs[env_names[0]].action_space
-        self.state_dim = self.observation_space.shape
-        # note, action_dim of 3 will reduce agent action to left, right, and forward
-        if 'action_dim' in env_config.keys():
-            self.action_dim = env_config['action_dim']
-        else:
-            self.action_dim = self.envs[env_names[0]].action_space.n
-        # env monitors
-        for name in self.envs.keys():
-            self.envs[name] = self.set_monitor(self.envs[name], log_dir)
-        # task label config
-        self.task_label_dim = env_config['label_dim']
-        self.one_hot_labels = True if env_config['one_hot'] else False
-        # all tasks
-        self.tasks = [{'name': name, 'task': name, 'task_label': None} \
-            for name in self.envs.keys()]
-        # generate label for each task
-        if self.one_hot_labels:
-            for idx in range(len(self.tasks)):
-                label = np.zeros((self.task_label_dim,)).astype(np.float32)
-                label[idx] = 1.
-                self.tasks[idx]['task_label'] = label
-        else:
-            labels = np.random.uniform(low=-1.,high=1.,size=(len(self.tasks), self.task_label_dim))
-            labels = labels.astype(np.float32) 
-            for idx in range(len(self.tasks)):
-                self.tasks[idx]['task_label'] = labels[idx]
-        # set default task
-        self.current_task = self.tasks[0]
-        self.env = self.envs[self.current_task['task']]
+#         # apply exploration bonus wrapper only to training envs
+#         if not eval_mode:
+#             if 'wrappers' in env_config.keys():
+#                 for str_wrapper in env_config['wrappers']:
+#                     cls_wrapper = self.wrappers_dict[str_wrapper]
+#                     for k in self.envs.keys():
+#                         self.envs[k] = cls_wrapper(self.envs[k])
+#         self.observation_space = self.envs[env_names[0]].observation_space
+#         self.action_space = self.envs[env_names[0]].action_space
+#         self.state_dim = self.observation_space.shape
+#         # note, action_dim of 3 will reduce agent action to left, right, and forward
+#         if 'action_dim' in env_config.keys():
+#             self.action_dim = env_config['action_dim']
+#         else:
+#             self.action_dim = self.envs[env_names[0]].action_space.n
+#         # env monitors
+#         for name in self.envs.keys():
+#             self.envs[name] = self.set_monitor(self.envs[name], log_dir)
+#         # task label config
+#         self.task_label_dim = env_config['label_dim']
+#         self.one_hot_labels = True if env_config['one_hot'] else False
+#         # all tasks
+#         self.tasks = [{'name': name, 'task': name, 'task_label': None} \
+#             for name in self.envs.keys()]
+#         # generate label for each task
+#         if self.one_hot_labels:
+#             for idx in range(len(self.tasks)):
+#                 label = np.zeros((self.task_label_dim,)).astype(np.float32)
+#                 label[idx] = 1.
+#                 self.tasks[idx]['task_label'] = label
+#         else:
+#             labels = np.random.uniform(low=-1.,high=1.,size=(len(self.tasks), self.task_label_dim))
+#             labels = labels.astype(np.float32) 
+#             for idx in range(len(self.tasks)):
+#                 self.tasks[idx]['task_label'] = labels[idx]
+#         # set default task
+#         self.current_task = self.tasks[0]
+#         self.env = self.envs[self.current_task['task']]
 
-    def step(self, action):
-        state, reward, done, info = self.env.step(action)
-        if done: state = self.reset()
-        return state, reward, done, info
+#     def step(self, action):
+#         state, reward, done, info = self.env.step(action)
+#         if done: state = self.reset()
+#         return state, reward, done, info
 
-    def reset(self):
-        state = self.env.reset()
-        return state
+#     def reset(self):
+#         state = self.env.reset()
+#         return state
 
-    def reset_task(self, taskinfo):
-        self.set_task(taskinfo)
-        return self.reset()
+#     def reset_task(self, taskinfo):
+#         self.set_task(taskinfo)
+#         return self.reset()
 
-    def set_task(self, taskinfo):
-        self.current_task = taskinfo
-        self.env = self.envs[self.current_task['task']]
+#     def set_task(self, taskinfo):
+#         self.current_task = taskinfo
+#         self.env = self.envs[self.current_task['task']]
     
-    def get_task(self):
-        return self.current_task
+#     def get_task(self):
+#         return self.current_task
 
-    def get_all_tasks(self, requires_task_label=True):
-        return self.tasks
+#     def get_all_tasks(self, requires_task_label=True):
+#         return self.tasks
     
-    def random_tasks(self, num_tasks, requires_task_label=True):
-        raise NotImplementedError
+#     def random_tasks(self, num_tasks, requires_task_label=True):
+#         raise NotImplementedError
 
-class MiniGridFlatObs(MiniGrid):
-    def __init__(self, name, env_config_path, log_dir=None, seed=1000, eval_mode=False):
-        super(MiniGridFlatObs, self).__init__(name, env_config_path, log_dir, seed, eval_mode)
-        self.state_dim = int(np.prod(self.env.observation_space.shape))
+# class MiniGridFlatObs(MiniGrid):
+#     def __init__(self, name, env_config_path, log_dir=None, seed=1000, eval_mode=False):
+#         super(MiniGridFlatObs, self).__init__(name, env_config_path, log_dir, seed, eval_mode)
+#         self.state_dim = int(np.prod(self.env.observation_space.shape))
 
-    def step(self, action):
-        state, reward, done, info = self.env.step(action)
-        if done: state = self.reset()
-        return state.ravel(), reward, done, info
+#     def step(self, action):
+#         state, reward, done, info = self.env.step(action)
+#         if done: state = self.reset()
+#         return state.ravel(), reward, done, info
 
-    def reset(self):
-        state = self.env.reset()
-        return state.ravel()
+#     def reset(self):
+#         state = self.env.reset()
+#         return state.ravel()
 
 class ContinualWorld(BaseTask):
 
@@ -564,20 +565,52 @@ class ContinualWorld(BaseTask):
         'random_init_all', # randomly generate a subtask per reset in env/task.
         'random_init_fixed20', # randomly selected out of 20 predefined subtask per reset in env/task
     ]
-    def _env_instantiator(self, task_name, randomization):
-        from gym.wrappers import TimeLimit
-        from continualworld.utils.wrappers import RandomizationWrapper, SuccessCounter
-        from continualworld.envs import get_subtasks, MT50, META_WORLD_TIME_HORIZON
-        # adapted from get_single_env in continualworld codebase.
-        env = MT50.train_classes[task_name]()
-        env = RandomizationWrapper(env, get_subtasks(task_name), randomization)
-        # Currently TimeLimit is needed since SuccessCounter looks at dones.
-        #env = TimeLimit(env, META_WORLD_TIME_HORIZON)
-        env = TimeLimit(env, 500)
-        #env = SuccessCounter(env)
-        env.name = task_name
-        #env.num_envs = 1
-        return env
+    # def _env_instantiator(self, task_name, randomization):
+        # from gym.wrappers import TimeLimit
+        # from continualworld.utils.wrappers import RandomizationWrapper, SuccessCounter
+        # from continualworld.envs import get_subtasks, MT50, META_WORLD_TIME_HORIZON
+        # # adapted from get_single_env in continualworld codebase.
+        # env = MT50.train_classes[task_name]()
+        # env = RandomizationWrapper(env, get_subtasks(task_name), randomization)
+        # # Currently TimeLimit is needed since SuccessCounter looks at dones.
+        # #env = TimeLimit(env, META_WORLD_TIME_HORIZON)
+        # env = TimeLimit(env, 500)
+        # #env = SuccessCounter(env)
+        # env.name = task_name
+        # #env.num_envs = 1
+        # return env
+    def _env_instantiator(self):
+        job_name_mtl = 'results/hopper_mtl_gravity_exp'
+        os.makedirs(job_name_mtl, exist_ok=True)
+
+        envs = {}
+        SEED = 600  # 500 for halfcheetah, 600 for hopper, 700 for walker 
+        num_tasks = 5
+
+        np.random.seed(SEED)
+        gravity_factors = []
+        env_ids = []
+        for task_id in range(num_tasks):
+            try_again = True
+            while try_again:
+                    gravity_factor = np.random.rand() + 0.5   ## 0.5 - 1.5
+                    env_id = 'Hopper{:.4f}g-v0'.format(gravity_factor)
+                    try:
+                        gym.envs.register(
+                                id=env_id,
+                                entry_point='gym_extensions.continuous.mujoco.modified_hopper:HopperGravityEnv',
+                                max_episode_steps=1000,
+                                reward_threshold=3800.0,
+                                kwargs=dict(gravity=-gravity_factor*9.81)
+                                )
+                        try_again = False
+                        gravity_factors.append(gravity_factor)
+                        env_ids.append(env_id)
+                        envs[str(gravity_factor)] = GymEnv(env_id)
+                    except:
+                        try_again = True
+
+        return envs
         
     def __init__(self, name, env_config_path, log_dir=None, seed=1000):
         BaseTask.__init__(self)
@@ -586,20 +619,28 @@ class ContinualWorld(BaseTask):
         with open(env_config_path, 'r') as f:
             env_config = json.load(f)
         self.env_config = env_config
-        env_names = env_config['tasks']
+        # env_names = env_config['tasks']
         rconfig = env_config['randomization']
         if rconfig not in ContinualWorld.RANDOMIZATION_STRATEGIES:
             msg = '`randomization` in config should be on of the following: {0}'.format(\
                 ContinualWorld.RANDOMIZATION_STRATEGIES)
             raise ValueError(msg)
-        self.envs = {env_name : self._env_instantiator(env_name, rconfig) for env_name in env_names}
-        self.observation_space = self.envs[env_names[0]].observation_space # (39,)
-        self.action_space = self.envs[env_names[0]].action_space # (4,)
-        self.state_dim = int(np.prod(self.observation_space.shape))
-        self.action_dim = int(np.prod(self.action_space.shape))
+        
+        # self.envs = {env_name : self._env_instantiator(env_name, rconfig) for env_name in env_names}
+        self.envs = self._env_instantiator()
+        env_names = list(self.envs.keys()) 
+
+        self.observation_space = self.envs[env_names[0]].spec.observation_dim#.observation_space() # (39,)
+        self.action_space = self.envs[env_names[0]].spec.action_dim#.action_space() # (4,)
+        # self.state_dim = int(np.prod(self.observation_space.shape))
+        # self.action_dim = int(np.prod(self.action_space.shape))
+
+        self.state_dim = int(np.prod(self.observation_space))
+        self.action_dim = int(np.prod(self.action_space))   
+
         # env monitors
-        for env_name in self.envs.keys():
-            self.envs[env_name] = self.set_monitor(self.envs[env_name], log_dir)
+        # for env_name in self.envs.keys():
+        #     self.envs[env_name] = self.set_monitor(self.envs[env_name], log_dir)
         # task label config
         self.task_label_dim = env_config['label_dim']
         self.one_hot_labels = True if env_config['one_hot'] else False
@@ -621,7 +662,8 @@ class ContinualWorld(BaseTask):
         self.env = self.envs[self.current_task['task']]
 
     def step(self, action):
-        _action = np.clip(action, self.env.action_space.low, self.env.action_space.high)
+        # _action = np.clip(action, self.env.action_space.low, self.env.action_space.high)
+        _action = np.clip(action, -1, 1)
         state, reward, done, info = self.env.step(_action)
         if done: state = self.reset()
         return state, reward, done, info
@@ -805,7 +847,7 @@ class ProcessWrapper(mp.Process):
         #seed = np.random.randint(0, sys.maxsize)
         seed = np.random.randint(0, 2**32 - 1)
         task = self.task_fn(log_dir=self.log_dir)
-        task.seed(seed)
+        # task.seed(seed)
         while True:
             op, data = self.pipe.recv()
             if op == self.STEP:
