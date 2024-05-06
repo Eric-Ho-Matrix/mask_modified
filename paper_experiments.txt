@@ -52,3 +52,10 @@ python train_continualworld.py ll_supermask --new_task_mask random --seed 436
 # mask lc (for continuous values mask setup). (runs as mask blc in exp_maskblc branch)
 # *no need* to run this in ‘exp_maskri_discrete_mask_cw10’ branch
 python train_continualworld.py ll_supermask --new_task_mask linear_comb --seed 436
+
+# mask lc with 2 iterations to test eval_task
+python train_continualworld.py ll_supermask --new_task_mask linear_comb --seed 436
+
+# 1 iteration = 5120 steps, 100 iterations = 512000
+python train_continualworld.py ll_supermask --max_steps 512000 --new_task_mask linear_comb --seed 436
+python train_continualworld.py ll_supermask --max_steps 512000 --new_task_mask random --seed 436

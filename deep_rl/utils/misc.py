@@ -228,9 +228,10 @@ def run_iterations_cl(agent, tasks_info): #run iterations continual learning (mu
     for learn_block_idx in range(config.cl_num_learn_blocks):
         config.logger.info('********** start of learning block {0}'.format(learn_block_idx))
         eval_results = {task_idx:[] for task_idx in range(len(tasks_info))}
+        config.logger.info('******* total number of tasks = {0}'.format(len(tasks_info)))
         for task_idx, task_info in enumerate(tasks_info):
 
-            config.logger.info('*****start training on task {0}'.format(task_idx))
+            config.logger.info('***** start training on task {0}'.format(task_idx))
             config.logger.info('task: {0}'.format(task_info['task']))
             config.logger.info('task_label: {0}'.format(task_info['task_label']))
 

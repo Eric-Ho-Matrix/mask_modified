@@ -32,6 +32,7 @@ lib64/
 parts/
 sdist/
 var/
+mujoco-py/
 *.egg-info/
 .installed.cfg
 *.egg

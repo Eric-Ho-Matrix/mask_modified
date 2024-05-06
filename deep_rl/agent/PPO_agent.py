@@ -105,7 +105,7 @@ class PPOContinualLearnerAgent(BaseContinualLearnerAgent):
             self.evaluation_env = config.eval_task_fn(config.log_dir)
             self.task = self.evaluation_env if self.task is None else self.task
         tasks_ = self.task.get_all_tasks(config.cl_requires_task_label)
-        # print(f"tasks len = {len(tasks_)} task_ids = {config.task_ids}")
+        print(f"[PPO_agent] tasks len = {len(tasks_)} task_ids = {config.task_ids}")
         tasks = [tasks_[task_id] for task_id in config.task_ids]
         del tasks_
         self.config.cl_tasks_info = tasks

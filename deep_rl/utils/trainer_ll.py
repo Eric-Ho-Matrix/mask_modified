@@ -124,7 +124,7 @@ def run_iterations_w_oracle(agent, tasks_info):
     for learn_block_idx in range(config.cl_num_learn_blocks):
         config.logger.info('********** start of learning block {0}'.format(learn_block_idx))
         eval_results = {task_idx:[] for task_idx in range(len(tasks_info))}
-
+        config.logger.info('******* total number of tasks = {0}'.format(len(tasks_info)))
         for task_idx, task_info in enumerate(tasks_info):
             config.logger.info('*****start training on task {0}'.format(task_idx))
             config.logger.info('name: {0}'.format(task_info['name']))
@@ -192,6 +192,7 @@ def run_iterations_w_oracle(agent, tasks_info):
 
                 # check whether task training has been completed
                 task_steps_limit = config.max_steps * (num_tasks * learn_block_idx + task_idx + 1)
+                print(f"[run_iterations_w_oracle] task_steps_limit = {task_steps_limit}")
                 if config.max_steps and agent.total_steps >= task_steps_limit:
                     with open(log_path_tstats + '/%s-%s-online-stats-%s-run-%d-task-%d.bin' % \
                         (agent_name, config.tag, agent.task.name, learn_block_idx+1, task_idx+1), 'wb') as f:

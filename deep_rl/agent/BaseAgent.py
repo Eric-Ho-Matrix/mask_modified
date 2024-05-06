@@ -9,6 +9,7 @@ import torch
 import numpy as np
 from ..utils import *
 
+
 class BaseAgent:
     def __init__(self, config):
         self.config = config
@@ -27,7 +28,8 @@ class BaseAgent:
         torch.save(self.network.state_dict(), filename)
 
     def load(self, filename):
-        state_dict = torch.load(filename, map_location=lambda storage, loc: storage)
+        state_dict = torch.load(
+            filename, map_location=lambda storage, loc: storage)
         self.network.load_state_dict(state_dict)
 
     def evaluation_action(self, state):
@@ -65,12 +67,15 @@ class BaseAgent:
             return
         for _ in range(steps):
             action = self.evaluation_action(self.evaluation_state)
-            self.evaluation_state, reward, done, _ = self.evaluation_env.step(action)
+            self.evaluation_state, reward, done, _ = self.evaluation_env.step(
+                action)
             self.evaluation_return += reward
             if done:
                 self.evaluation_state = self.evaluation_env.reset()
-                self.config.logger.info('evaluation episode return: %f' % (self.evaluation_return))
+                self.config.logger.info(
+                    'evaluation episode return: %f' % (self.evaluation_return))
                 self.evaluation_return = 0
+
 
 class BaseContinualLearnerAgent(BaseAgent):
     def __init__(self, config):
@@ -88,27 +93,30 @@ class BaseContinualLearnerAgent(BaseAgent):
         task_label = np.stack([task_label])
         out = self.network.predict(state, task_label=task_label)
         self.config.state_normalizer.unset_read_only()
+        # print(f'[BaseAgent] evaluation_env.action_space type = {self.evaluation_env}')
         if isinstance(out, dict) or isinstance(out, list) or isinstance(out, tuple):
             # for actor-critic and policy gradient approaches
-            if isinstance(self.evaluation_env.action_space, gym.spaces.Discrete): # discrete action
+            if isinstance(self.evaluation_env.action_space, gym.spaces.Discrete):  # discrete action
                 if deterministic:
-                    action = np.argmax(out[0].cpu().numpy().flatten()) # out[0] contains logits
+                    # out[0] contains logits
+                    action = np.argmax(out[0].cpu().numpy().flatten())
                 else:
                     action = out[1].cpu().numpy().flatten()
-                ret = {'policy_output': out[0], 'sampled_action': out[1], 'log_prob': out[2], 
-                    'entropy': out[3], 'value': out[4], 'agent_action': action}
+                ret = {'policy_output': out[0], 'sampled_action': out[1], 'log_prob': out[2],
+                       'entropy': out[3], 'value': out[4], 'agent_action': action}
                 return action, ret
-            elif isinstance(self.evaluation_env.action_space, gym.spaces.Box): # continuous action
+            elif isinstance(self.evaluation_env.action_space, gym.spaces.Box):  # continuous action
                 if deterministic:
-                    action = out[0].cpu().numpy().flatten() # mean / deterministic action of policy
+                    # mean / deterministic action of policy
+                    action = out[0].cpu().numpy().flatten()
                 else:
                     action = out[1].cpu().numpy().flatten()
-                ret = {'policy_output': out[0], 'sampled_action': out[1], 'log_prob': out[2], 
-                    'entropy': out[3], 'value': out[4], 'agent_action': action}
+                ret = {'policy_output': out[0], 'sampled_action': out[1], 'log_prob': out[2],
+                       'entropy': out[3], 'value': out[4], 'agent_action': action}
                 return action, ret
             else:
-                raise ValueError('env action space not defined. it should be gym.spaces.Discrete' \
-                    'or gym.spaces.Box')
+                raise ValueError('env action space not defined. it should be gym.spaces.Discrete'
+                                 'or gym.spaces.Box')
         else:
             # for dqn approaches
             q = out
@@ -117,9 +125,9 @@ class BaseContinualLearnerAgent(BaseAgent):
 
     def run_episode(self, deterministic=True):
         epi_info = {'policy_output': [], 'sampled_action': [], 'log_prob': [], 'entropy': [],
-            'value': [], 'agent_action': [], 'reward': [], 'terminal': [], 'state': []}
+                    'value': [], 'agent_action': [], 'reward': [], 'terminal': [], 'state': []}
 
-        #env = self.config.evaluation_env
+        # env = self.config.evaluation_env
         env = self.evaluation_env
         state = env.reset()
         if self.curr_eval_task_label is not None:
@@ -130,21 +138,24 @@ class BaseContinualLearnerAgent(BaseAgent):
         total_rewards = 0
         while True:
             epi_info['state'].append(state)
-            action, output_info = self.evaluation_action(state, task_label, deterministic)
+            action, output_info = self.evaluation_action(
+                state, task_label, deterministic)
             state, reward, done, info = env.step(action)
             total_rewards += reward
-            for k, v in output_info.items(): epi_info[k].append(v)
+            for k, v in output_info.items():
+                epi_info[k].append(v)
             epi_info['reward'].append(reward)
             epi_info['terminal'].append(done)
-            if done: break
+            if done:
+                break
         return total_rewards, epi_info
 
     def run_episode_metaworld(self, deterministic=False):
         epi_info = {'policy_output': [], 'sampled_action': [], 'log_prob': [], 'entropy': [],
-            'value': [], 'agent_action': [], 'reward': [], 'terminal': [],
-            'success': [], 'state': []}
+                    'value': [], 'agent_action': [], 'reward': [], 'terminal': [],
+                    'success': [], 'state': []}
 
-        #env = self.config.evaluation_env
+        # env = self.config.evaluation_env
         env = self.evaluation_env
         state = env.reset()
         if self.curr_eval_task_label is not None:
@@ -155,21 +166,24 @@ class BaseContinualLearnerAgent(BaseAgent):
         total_success = 0
         while True:
             epi_info['state'].append(state)
-            action, output_info = self.evaluation_action(state, task_label, deterministic)
+            action, output_info = self.evaluation_action(
+                state, task_label, deterministic)
             state, reward, done, info = env.step(action)
             total_success += info['success']
-            for k, v in output_info.items(): epi_info[k].append(v)
+            for k, v in output_info.items():
+                epi_info[k].append(v)
             epi_info['reward'].append(reward)
             epi_info['terminal'].append(done)
             epi_info['success'].append(info['success'])
-            if done: break
+            if done:
+                break
         total_success = 1. if total_success > 0. else 0.
         return total_success, epi_info
 
     def evaluate_cl(self, num_iterations=100):
         fn_episode = None
-        if self.evaluation_env.name == self.config.ENV_METAWORLD or \
-            self.evaluation_env.name == self.config.ENV_CONTINUALWORLD:
+        if self.evaluation_env.name == self.config.ENV_METAWORLD:  # or \
+            # self.evaluation_env.name == self.config.ENV_CONTINUALWORLD:
             fn_episode = self.run_episode_metaworld
         else:
             fn_episode = self.run_episode
