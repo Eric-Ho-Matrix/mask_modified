@@ -2071,3 +2071,29 @@ salloc: Relinquishing job allocation 1909222
 2024-05-05 20:57:01,144 - MAIN - INFO: iteration 1997, total steps 10224640, mean/max/min reward 2217.675005/2217.675005/2217.675005, mean/max/min success rate 0.000000/0.000000/0.000000
 2024-05-05 20:57:11,906 - MAIN - INFO: iteration 1998, total steps 10229760, mean/max/min reward 1389.400986/1389.400986/1389.400986, mean/max/min success rate 0.000000/0.000000/0.000000
 2024-05-05 20:57:22,589 - MAIN - INFO: iteration 1999, total steps 10234880, mean/max/min reward 2826.800589/2826.800589/2826.800589, mean/max/min success rate 0.000000/0.000000/0.000000
+2024-05-05 20:57:33,373 - MAIN - INFO: iteration 2000, total steps 10240000, mean/max/min reward 1655.513490/1655.513490/1655.513490, mean/max/min success rate 0.000000/0.000000/0.000000
+2024-05-05 20:57:33,621 - MAIN - INFO: *****agent / evaluation block
+2024-05-05 20:57:33,621 - MAIN - INFO: eval tasks: 0.5323672751778389, 1.0424096630692734, 1.302919609536056, 0.5551594034694504, 0.8822647751508021, 0.7109705921716479
+2024-05-05 20:57:49,327 - MAIN - INFO: *****cl evaluation:
+2024-05-05 20:57:49,328 - MAIN - INFO: cl eval ICR: 3191.096759177526
+2024-05-05 20:57:49,328 - MAIN - INFO: cl eval TPOT: 43253.18908186285
+2024-05-05 20:57:49,338 - MAIN - INFO: cacheing mask for current task
+2024-05-05 20:57:49,375 - MAIN - INFO: evaluating agent across all tasks exposed so far to agent
+2024-05-05 20:57:53,550 - MAIN - INFO: *****start training on task 1
+2024-05-05 20:57:53,551 - MAIN - INFO: name: 1.0424096630692734
+2024-05-05 20:57:53,551 - MAIN - INFO: task: 1.0424096630692734
+2024-05-05 20:57:53,551 - MAIN - INFO: task_label: [0. 1. 0. 0. 0. 0.]
+2024-05-05 20:58:10,185 - MAIN - INFO: iteration 2001, total steps 10245120, mean/max/min reward 326.415712/326.415712/326.415712, mean/max/min success rate 0.000000/0.000000/0.000000
+2024-05-05 20:58:27,342 - MAIN - INFO: iteration 2002, total steps 10250240, mean/max/min reward 232.716851/232.716851/232.716851, mean/max/min success rate 0.000000/0.000000/0.000000
+2024-05-05 20:58:44,628 - MAIN - INFO: iteration 2003, total steps 10255360, mean/max/min reward 261.904595/261.904595/261.904595, mean/max/min success rate 0.000000/0.000000/0.000000
+2024-05-05 20:59:01,685 - MAIN - INFO: iteration 2004, total steps 10260480, mean/max/min reward 252.558623/252.558623/252.558623, mean/max/min success rate 0.000000/0.000000/0.000000
+2024-05-05 20:59:18,881 - MAIN - INFO: iteration 2005, total steps 10265600, mean/max/min reward 276.674899/276.674899/276.674899, mean/max/min success rate 0.000000/0.000000/0.000000
+2024-05-05 20:59:35,941 - MAIN - INFO: iteration 2006, total steps 10270720, mean/max/min reward 295.371202/295.371202/295.371202, mean/max/min success rate 0.000000/0.000000/0.000000
+2024-05-05 20:59:53,043 - MAIN - INFO: iteration 2007, total steps 10275840, mean/max/min reward 273.854023/273.854023/273.854023, mean/max/min success rate 0.000000/0.000000/0.000000
+2024-05-05 21:00:09,963 - MAIN - INFO: iteration 2008, total steps 10280960, mean/max/min reward 297.251162/297.251162/297.251162, mean/max/min success rate 0.000000/0.000000/0.000000
+2024-05-05 21:00:27,151 - MAIN - INFO: iteration 2009, total steps 10286080, mean/max/min reward 316.130214/316.130214/316.130214, mean/max/min success rate 0.000000/0.000000/0.000000
+2024-05-05 21:00:44,317 - MAIN - INFO: iteration 2010, total steps 10291200, mean/max/min reward 323.074550/323.074550/323.074550, mean/max/min success rate 0.000000/0.000000/0.000000
+2024-05-05 21:01:01,527 - MAIN - INFO: iteration 2011, total steps 10296320, mean/max/min reward 338.838576/338.838576/338.838576, mean/max/min success rate 0.000000/0.000000/0.000000
+2024-05-05 21:01:18,868 - MAIN - INFO: iteration 2012, total steps 10301440, mean/max/min reward 342.847861/342.847861/342.847861, mean/max/min success rate 0.000000/0.000000/0.000000
+2024-05-05 21:01:36,554 - MAIN - INFO: iteration 2013, total steps 10306560, mean/max/min reward 329.736882/329.736882/329.736882, mean/max/min success rate 0.000000/0.000000/0.000000
+2024-05-05 21:01:54,135 - MAIN - INFO: iteration 2014, total steps 10311680, mean/max/min reward 345.070112/345.070112/345.070112, mean/max/min success rate 0.000000/0.000000/0.000000
